@@ -4,18 +4,30 @@ on:
   workflow_dispatch:
   push:
   schedule:
-    - cron: 10 2 * * *
+    - cron: '30 2 * * *'   # 每天 UTC 时间 9:00 触发（注意时区！）9-8=1
 
 jobs:
   run:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Checkout
+        uses: |
+            actions/checkout@v3
+            actions/setup-node@v3
         with:
           node-version: 18
-      - run: npm ci
-      - run: npm run main
+
+      - name: Random sleep (0 to 100 minutes)
+        run: |
+          # 生成 0 到 100 的随机整数（单位：分钟）
+          RANDOM_MINUTES=$((RANDOM % 101))
+          echo "Sleeping for $RANDOM_MINUTES minutes..."
+          sleep $((RANDOM_MINUTES * 60))
+
+      - name: Run your actual task
+        run: |
+          npm ci
+          npm run main
         env:
           GLADOS: ${{ secrets.GLADOS }}
           NOTIFY: ${{ secrets.NOTIFY }}
