@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
   schedule:
-    - cron: '30 2 * * *'   # 每天 UTC 时间 9:00 触发（注意时区！）9-8=1
+    - cron: '0 1 * * *'   # 每天 UTC 时间 9:00 触发（注意时区！）9-8=1
 
 jobs:
   run:
