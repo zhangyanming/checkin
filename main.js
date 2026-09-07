@@ -55,13 +55,13 @@ const tdx = async () => {
       notice.push(
         'TDX Checkin OK',
         `${action?.[0]?.[0] == 0 ? '签到成功' : '签到失败'}`,
-        `${action?.[0]?.[1]}`
+        `${action?.[0]?.[1] || ''}`
       )
     } catch (error) {
       notice.push(
         'TDX Checkin Error',
         `${error}`,
-        ``
+        `<${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}>`
       )
     }
   }
@@ -72,9 +72,9 @@ const checkin = async () => {
   const notice1 = await glados()
   const notice2 = await tdx()
   const notice = []
-  notice.push(notice1[0] || '|' + notice2[0] || '')
-  notice.push(notice1[1] || '|' + notice2[1] || '')
-  notice.push(notice1[2] || '|' + notice2[2] || '')
+  notice.push(`${notice1[0]} / ${notice2[0]}`)
+  notice.push(`${notice1[1]} / ${notice2[1]}`)
+  notice.push(`${notice1[2]} / ${notice2[2]}`)
   return notice
 }
 
