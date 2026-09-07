@@ -21,13 +21,13 @@ const glados = async () => {
       }).then((r) => r.json())
       if (status?.code) throw new Error(status?.message)
       notice.push(
-        'Checkin OK',
+        'Glados Checkin OK',
         `${action?.message}`,
-        `Left Days ${Number(status?.data?.leftDays)}`
+        `剩余天数: ${Number(status?.data?.leftDays)}`
       )
     } catch (error) {
       notice.push(
-        'Checkin Error',
+        'Glados Checkin Error',
         `${error}`,
         `<${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}>`
       )
@@ -35,6 +35,49 @@ const glados = async () => {
   }
   return notice
 }
+
+const tdx = async () => {
+  const notice = []
+  if (!process.env.TDX) return
+  for (const cookie of String(process.env.TDX).split('\n')) {
+    if (!cookie) continue
+    try {
+      const common = {
+        'cookie': cookie,
+        'referer': 'https://agent.tdx.com.cn/tdx-mcp/agent.html?tab=create&agentClass=1',
+        'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36',
+      }
+      const action = await fetch('https://agent.tdx.com.cn/TQL?Entry=Points.sendAiDailyReward&RI=', {
+        method: 'POST',
+        headers: { ...common, 'content-type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+        body: '[{}]',
+      }).then((r) => r.json())
+      notice.push(
+        'TDX Checkin OK',
+        `${action?.[0]?.[0] == 0 ? '签到成功' : '签到失败'}`,
+        `${action?.[0]?.[1]}`
+      )
+    } catch (error) {
+      notice.push(
+        'TDX Checkin Error',
+        `${error}`,
+        ``
+      )
+    }
+  }
+  return notice
+}
+
+const checkin = async () => {
+  const notice1 = await glados()
+  const notice2 = await tdx()
+  const notice = []
+  notice.push(notice1[0] || '|' + notice2[0] || '')
+  notice.push(notice1[1] || '|' + notice2[1] || '')
+  notice.push(notice1[2] || '|' + notice2[2] || '')
+  return notice
+}
+
 
 const notify = async (notice) => {
   if (!process.env.NOTIFY || !notice) return
@@ -77,7 +120,7 @@ const notify = async (notice) => {
           body: JSON.stringify({
             msgtype: 'markdown',
             markdown: {
-                content: notice.join('<br>')
+              content: notice.join('<br>')
             }
           }),
         })
@@ -101,7 +144,7 @@ const notify = async (notice) => {
 }
 
 const main = async () => {
-  await notify(await glados())
+  await notify(await checkin())
 }
 
 main()
