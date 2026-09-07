@@ -21,7 +21,7 @@ jobs:
       - name: Random sleep (0 to 100 minutes)
         run: |
           # 生成 0 到 100 的随机整数（单位：分钟）
-          RANDOM_MINUTES=$((RANDOM % 101))
+          RANDOM_MINUTES=$((RANDOM % 51))
           echo "Sleeping for $RANDOM_MINUTES minutes..."
           sleep $((RANDOM_MINUTES * 60))
 
