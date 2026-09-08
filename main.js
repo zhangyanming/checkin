@@ -44,7 +44,7 @@ const tdx = async () => {
     try {
       const common = {
         'cookie': cookie,
-        'referer': 'https://agent.tdx.com.cn/tdx-mcp/agent.html?tab=create&agentClass=1',
+        'referer': 'https://agent.tdx.com.cn/tdx-mcp/agent.html',
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36',
       }
       const action = await fetch('https://agent.tdx.com.cn/TQL?Entry=Points.sendAiDailyReward&RI=', {
@@ -55,7 +55,7 @@ const tdx = async () => {
       notice.push(
         'TDX Checkin OK',
         `${action?.[0]?.[0] == 0 ? '签到成功' : '签到失败'}`,
-        `${action?.[0]?.[1] || ''}`
+        `${action?.[0]?.[0] || ''}`
       )
     } catch (error) {
       notice.push(
