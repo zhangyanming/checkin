@@ -47,15 +47,29 @@ const tdx = async () => {
         'referer': 'https://agent.tdx.com.cn/tdx-mcp/agent.html',
         'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36',
       }
-      const action = await fetch('https://agent.tdx.com.cn/TQL?Entry=Points.sendAiDailyReward&RI=', {
+      const res = await fetch('https://agent.tdx.com.cn/TQL?Entry=Points.sendAiDailyReward&RI=', {
         method: 'POST',
         headers: { ...common, 'content-type': 'application/x-www-form-urlencoded; charset=UTF-8' },
         body: '[{}]',
-      }).then((r) => r.json())
+      })
+      const text = await res.text()
+      let action
+      try {
+        action = JSON.parse(text)
+      } catch {
+        notice.push(
+          'TDX 解析失败',
+          `${text}`,
+          `<${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}>`
+        )
+        return notice
+      }
+      const code = action?.[0]?.[0]
+      const msg = action?.[0]?.[1]
       notice.push(
         'TDX Checkin OK',
-        `${action?.[0]?.[0] == 0 ? '签到成功' : '签到失败'}`,
-        `${action?.[0]?.[0] || ''}`
+        code === 0 ? '签到成功' : (code === -1 ? '今日已签到' : '签到失败'),
+        `${msg || ''}`
       )
     } catch (error) {
       notice.push(
