@@ -21,13 +21,13 @@ const glados = async () => {
       }).then((r) => r.json())
       if (status?.code) throw new Error(status?.message)
       notice.push(
-        'Glados Checkin OK',
+        'Glados OK Checkin',
         `${action?.message}`,
         `剩余天数: ${Number(status?.data?.leftDays)}`
       )
     } catch (error) {
       notice.push(
-        'Glados Checkin Error',
+        'Glados Error Checkin',
         `${error}`,
         `<${process.env.GITHUB_SERVER_URL}/${process.env.GITHUB_REPOSITORY}>`
       )
