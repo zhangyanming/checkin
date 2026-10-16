@@ -4,7 +4,7 @@ GitHub Actions 实现 [GLaDOS][glados] 自动签到
 
 ([GLaDOS][glados] 可用邀请码: `GMWYT-PT9ZJ-QBNIQ-YC6QM`, 双方都有奖励天数)
 
-## 使用说明
+## 使用说明 
 
 1. Fork 这个仓库
 
