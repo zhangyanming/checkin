@@ -13,7 +13,7 @@ name: run
 on:
   workflow_dispatch:
   schedule:
-    - cron: '50 0 * * *'
+    - cron: '30 0 * * *'
 
 # 同一时间只允许一个签到实例，避免重复签到 / 并发冲突
 concurrency:
