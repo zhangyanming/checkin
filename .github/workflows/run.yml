@@ -32,9 +32,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+
+      - name: Show time (调试用)
+        run: |
+          echo "UTC:    $(date -u '+%F %T %Z')"
+          echo "Beijing:$(TZ='Asia/Shanghai' date '+%F %T %Z')"
+          
       - name: Install
         run: npm ci || npm install
-
+          
       # 签到前先确认协议没变。宽松模式：只打印告警，不阻断签到，
       # 避免误报导致漏签；严重变化由独立的 guard.yml 严格告警。
       - name: Protocol Guard
